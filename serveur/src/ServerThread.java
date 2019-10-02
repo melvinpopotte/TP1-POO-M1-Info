@@ -6,6 +6,7 @@ public class ServerThread extends Thread implements Serializable {
     private Socket client;
 
     public ServerThread(Socket client) {
+        System.out.println("\nNew Thread =>");
         this.client = client;
     }
 
@@ -14,7 +15,7 @@ public class ServerThread extends Thread implements Serializable {
 
         try {
 
-            System.out.println("\n---------------------\nNew client connected \n ip adress => " + client.getLocalAddress());
+            System.out.println("---------------------\nNew client connected \n ip adress => " + client.getLocalAddress()+"\n");
             InputStream in = client.getInputStream();
             OutputStream out = client.getOutputStream();
             //ObjectInputStream objIn = new ObjectInputStream(in);
