@@ -5,6 +5,9 @@ public class ServerThread extends Thread implements Serializable {
 
     private Socket client;
 
+    public ServerThread(Socket client) {
+        this.client = client;
+    }
 
     @Override
     public void run() {
@@ -19,6 +22,7 @@ public class ServerThread extends Thread implements Serializable {
 
             Integer I = new Integer(3);
             objOut.writeObject(I);
+
 
 
             //UnObjet O= (UnObjet)objIn.readObject(O);

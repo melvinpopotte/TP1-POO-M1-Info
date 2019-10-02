@@ -15,6 +15,14 @@ public class Server implements Serializable {
             while (true) {
                 // On accepte une demande de connexion d'un client
                 Socket client=ecoute.accept();
+
+                Thread th = new ServerThread(client);
+                th.start();
+
+
+
+
+                /*
                 System.out.println("\n---------------------\nNew client connected \n ip adress => "+client.getLocalAddress());
                 InputStream in = client.getInputStream();
                 OutputStream out = client.getOutputStream();
@@ -28,6 +36,8 @@ public class Server implements Serializable {
                 //UnObjet O= (UnObjet)objIn.readObject(O);
                 client.close();
 
+
+                 */
             }
         }
         catch (IOException e) {
