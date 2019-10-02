@@ -18,8 +18,8 @@ public class Server implements Serializable {
                 System.out.println("\n---------------------\nNew client connected \n ip adress => "+client.getLocalAddress());
                 InputStream in = client.getInputStream();
                 OutputStream out = client.getOutputStream();
-                //ObjectInputStream objIn = new ObjectInputStream(in);
                 ObjectOutputStream objOut = new ObjectOutputStream(out);
+                //ObjectInputStream objIn = new ObjectInputStream(in);
 
                 Integer I= new Integer(3);
                 objOut.writeObject(I);
