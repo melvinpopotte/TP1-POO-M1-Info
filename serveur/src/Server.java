@@ -3,10 +3,14 @@ import java.io.*;
 
 
 public class Server implements Serializable {
-
+    Object obj = new ObjectServ();
 
 
     public Server(int PORT)  {
+
+        //System.out.println(obj.getClass().getDeclaredFields()[0].getName());
+
+
         try {
             // On écoute sur le port <PORT>
             ServerSocket ecoute=new ServerSocket(PORT);
