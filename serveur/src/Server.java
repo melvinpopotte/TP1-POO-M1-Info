@@ -1,3 +1,4 @@
+import java.lang.reflect.Field;
 import java.net.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class Server implements Serializable {
             while (true) {
                 // On accepte une demande de connexion d'un client
                 Socket client=ecoute.accept();
-
                 Thread th = new ServerThread(client,liste1,liste2);
                 th.start();
 
@@ -60,4 +60,4 @@ public class Server implements Serializable {
             System.exit(1);
         }
     }
-}
+    }

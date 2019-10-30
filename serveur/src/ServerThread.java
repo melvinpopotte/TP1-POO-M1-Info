@@ -29,15 +29,20 @@ public class ServerThread extends Thread implements Serializable {
             ObjectOutputStream objOut = new ObjectOutputStream(out);
             ObjectInputStream objIn = new ObjectInputStream(in);
 
-            I = liste1.get(0);
-            I = liste1.remove(0);
-
+            synchronized (liste1) {
+                I = liste1.get(0);
+                I = liste1.remove(0);
+            }
 
             objOut.writeObject(I);
             I = objIn.readObject();
 
 
-            liste2.add(I);
+            synchronized (liste2){
+                liste2.add(I);
+            }
+
+
             for (Object o: liste2) {
                 for (Field f : o.getClass().getDeclaredFields() ) {
                     f.setAccessible(true);
