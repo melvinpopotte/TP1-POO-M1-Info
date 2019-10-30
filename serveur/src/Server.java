@@ -20,7 +20,7 @@ public class Server implements Serializable {
                 // On accepte une demande de connexion d'un client
                 Socket client=ecoute.accept();
 
-                Thread th = new ServerThread(client);
+                Thread th = new ServerThread(client,obj);
                 th.start();
 
 

@@ -5,9 +5,11 @@ import java.net.Socket;
 public class ServerThread extends Thread implements Serializable {
 
     private Socket client;
+    private Object I;
 
-    public ServerThread(Socket client) {
+    public ServerThread(Socket client , Object I) {
         this.client = client;
+        this.I = I;
     }
 
     @Override
@@ -23,7 +25,7 @@ public class ServerThread extends Thread implements Serializable {
             ObjectInputStream objIn = new ObjectInputStream(in);
 
 
-            Object I = new ObjectServ();
+
             System.out.println();
             for (Field f : I.getClass().getDeclaredFields() ) {
                 f.setAccessible(true);
