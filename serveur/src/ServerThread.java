@@ -1,15 +1,20 @@
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class ServerThread extends Thread implements Serializable {
 
     private Socket client;
     private Object I;
+    private ArrayList<Object> liste1 ;
+    private ArrayList<Object> liste2 ;
 
-    public ServerThread(Socket client , Object I) {
+
+    public ServerThread(Socket client , ArrayList<Object> liste1 ,ArrayList<Object>  liste2) {
         this.client = client;
-        this.I = I;
+        this.liste1 = liste1;
+        this.liste2 = liste2;
     }
 
     @Override
@@ -24,21 +29,22 @@ public class ServerThread extends Thread implements Serializable {
             ObjectOutputStream objOut = new ObjectOutputStream(out);
             ObjectInputStream objIn = new ObjectInputStream(in);
 
+            I = liste1.get(0);
+            I = liste1.remove(0);
 
 
-            System.out.println();
-            for (Field f : I.getClass().getDeclaredFields() ) {
-                f.setAccessible(true);
-                System.out.println("Before : "+f.getName()+" => "+f.get(I));
-            }
-            System.out.println("______________\n");
             objOut.writeObject(I);
             I = objIn.readObject();
-            for (Field f : I.getClass().getDeclaredFields() ) {
-                f.setAccessible(true);
-                System.out.println(f.getName()+" => "+f.get(I));
-            }
 
+
+            liste2.add(I);
+            for (Object o: liste2) {
+                for (Field f : o.getClass().getDeclaredFields() ) {
+                    f.setAccessible(true);
+                    System.out.println(f.getName()+" => "+f.get(o));
+                }
+
+            }
 
 
             //UnObjet O= (UnObjet)objIn.readObject(O);
@@ -51,6 +57,7 @@ public class ServerThread extends Thread implements Serializable {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
 
     }
 }

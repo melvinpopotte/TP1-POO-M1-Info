@@ -1,14 +1,25 @@
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 
 public class Server implements Serializable {
+    //premiere liste d'object vides  a envoyer au client on retire un element de la liste il est remplis par le client et renvoyer
+    //deuxieme liste d'object contient les objects remplis par le client
+
+    ArrayList<Object> liste1 = new ArrayList<Object>();
+    ArrayList<Object> liste2 = new ArrayList<Object>();
+
     Object obj = new ObjectServ();
 
 
     public Server(int PORT)  {
 
         //System.out.println(obj.getClass().getDeclaredFields()[0].getName());
+        for (int i = 0; i < 50 ; i++) {
+            liste1.add( new ObjectServ() );
+        }
+
 
 
         try {
@@ -20,7 +31,7 @@ public class Server implements Serializable {
                 // On accepte une demande de connexion d'un client
                 Socket client=ecoute.accept();
 
-                Thread th = new ServerThread(client,obj);
+                Thread th = new ServerThread(client,liste1,liste2);
                 th.start();
 
 
