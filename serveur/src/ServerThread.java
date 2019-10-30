@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.Socket;
 
 public class ServerThread extends Thread implements Serializable {
@@ -23,7 +24,18 @@ public class ServerThread extends Thread implements Serializable {
 
 
             Object I = new ObjectServ();
+            System.out.println();
+            for (Field f : I.getClass().getDeclaredFields() ) {
+                f.setAccessible(true);
+                System.out.println("Before : "+f.getName()+" => "+f.get(I));
+            }
+            System.out.println("______________\n");
             objOut.writeObject(I);
+            I = objIn.readObject();
+            for (Field f : I.getClass().getDeclaredFields() ) {
+                f.setAccessible(true);
+                System.out.println(f.getName()+" => "+f.get(I));
+            }
 
 
 
@@ -32,6 +44,10 @@ public class ServerThread extends Thread implements Serializable {
         } catch (IOException e) {
             System.err.println(e.getMessage());
             System.exit(1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
 
     }

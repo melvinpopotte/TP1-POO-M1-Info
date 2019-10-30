@@ -3,7 +3,8 @@ import java.io.Serializable;
 public class ObjectServ implements Serializable {
 
     private String name = "Melvin";
-    private int age = 20;
+    private int age = 10;
+
 
     public ObjectServ() {
     }

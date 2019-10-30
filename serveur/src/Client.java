@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.*;
 import java.io.*;
+import java.util.Scanner;
 
 
 public class Client implements Serializable {
@@ -34,7 +35,7 @@ public class Client implements Serializable {
                 Class classe = I.getClass();
 
 
-                System.out.println("L'object  a "+classe.getDeclaredFields().length+" elements");
+                //System.out.println("L'object  a "+classe.getDeclaredFields().length+" elements");
              /*
                 Field[] variables = classe.getDeclaredFields();
                // for (Field f: variables) {
@@ -50,28 +51,43 @@ public class Client implements Serializable {
 
 
               */
+             Scanner sc = new Scanner(System.in);
 
-                for (Method q: classe.getMethods() ) {
-                    if (q.getName().contains("setage")){
-                        System.out.println("age = "+classe.getMethod("getAge").invoke(I));
+                for (Field q: classe.getDeclaredFields() ) {
+                    q.setAccessible(true);
 
-                        q.invoke(I,10);
-                        System.out.println("age = "+classe.getMethod("getAge").invoke(I));
-
+                    if (q.getType() == int.class){
+                        System.out.println(q.getName()+" : Veuillez entrer un entier");
+                        q.setInt(I,sc.nextInt());
                     }
+                    if (q.getType() == float.class){
+                        System.out.println(q.getName()+" :Veuillez entrer un float");
+                        q.setFloat(I,sc.nextFloat());
+                    }
+                    if (q.getType() == String.class){
+                        System.out.println(q.getName()+" :Veuillez entrer une chaine de caractère");
+                        q.set(I,sc.next());
+                    }
+
+
+
+
+                        //System.out.println("age = "+classe.getMethod("getName").invoke(I));
+                        //System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
+                        //System.out.println("age = "+classe.getMethod("getName").invoke(I));
                    // System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
                 }
 
+                objOut.writeObject(I);
 
 
 
             }
-            catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException e){
+            catch (ClassNotFoundException e){
                 System.err.println(e);
-            } catch (NoSuchMethodException e) {
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
-
 
             //UnObjet O= new UnObjet() ;
             //objOut.writeObject(O);
