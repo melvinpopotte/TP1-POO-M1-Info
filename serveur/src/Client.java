@@ -1,10 +1,9 @@
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
 import java.awt.*;
 import java.lang.reflect.Field;
 import java.net.*;
 import java.io.*;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 
 public class Client implements Serializable {
@@ -17,6 +16,7 @@ public class Client implements Serializable {
 
         frame.setSize(500,700);
         JPanel pane1 = new JPanel();
+        ArrayList<JTextField> listeinput = new ArrayList<>();
         Container contenu = frame.getContentPane();
         contenu.add(BorderLayout.CENTER,pane1);
         frame.setVisible(true);
@@ -64,7 +64,7 @@ public class Client implements Serializable {
                 Button ok = new Button("ok");
                 ok.setPreferredSize(new Dimension(130,70));
 
-                inputclasse(I,classe,pane1);
+                inputclasse(I,classe,pane1,listeinput);
                 pane1.add(ok);
                 frame.setVisible(true);
                 objOut.writeObject(I);
@@ -89,7 +89,7 @@ public class Client implements Serializable {
     }
 
 
-    public void inputclasse(Object I,Class classe,JPanel pane1) throws IllegalAccessException {
+    public void inputclasse(Object I,Class classe,JPanel pane1,ArrayList<JTextField> listeinput) throws IllegalAccessException {
         //Scanner sc = new Scanner(System.in);
 
         for (Field q: classe.getDeclaredFields() ) {
@@ -98,6 +98,7 @@ public class Client implements Serializable {
             if (q.getType() == int.class){
                 JLabel label = new JLabel(q.getName()+" : Veuillez entrer un entier");
                 JTextField txt = new JTextField();
+                listeinput.add(txt);
                 txt.setPreferredSize(new Dimension(150,30));
                 pane1.add(label);
                 pane1.add(txt);
@@ -108,6 +109,7 @@ public class Client implements Serializable {
             if (q.getType() == float.class){
                 JLabel label = new JLabel(q.getName()+" : Veuillez entrer un float");
                 JTextField txt = new JTextField();
+                listeinput.add(txt);
                 txt.setPreferredSize(new Dimension(150,30));
                 pane1.add(label);
                 pane1.add(txt);
@@ -117,6 +119,7 @@ public class Client implements Serializable {
             if (q.getType() == String.class){
                 JLabel label = new JLabel(q.getName()+" : Veuillez entrer une chaine de caractère");
                 JTextField txt = new JTextField();
+                listeinput.add(txt);
                 txt.setPreferredSize(new Dimension(150,30));
                 pane1.add(label);
                 pane1.add(txt);
@@ -125,7 +128,7 @@ public class Client implements Serializable {
             }
             if(q.getType() == Object.class){
                 //System.out.println("found a class my friende => "+q);
-                inputclasse(q.get(I),q.get(I).getClass(),pane1);
+                inputclasse(q.get(I),q.get(I).getClass(),pane1,listeinput);
             }
 
 
