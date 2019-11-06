@@ -1,7 +1,4 @@
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.net.*;
 import java.io.*;
 import java.util.Scanner;
@@ -51,42 +48,15 @@ public class Client implements Serializable {
 
 
               */
-             Scanner sc = new Scanner(System.in);
 
-                for (Field q: classe.getDeclaredFields() ) {
-                    q.setAccessible(true);
-
-                    if (q.getType() == int.class){
-                        System.out.println(q.getName()+" : Veuillez entrer un entier");
-                        q.setInt(I,sc.nextInt());
-                    }
-                    if (q.getType() == float.class){
-                        System.out.println(q.getName()+" :Veuillez entrer un float");
-                        q.setFloat(I,sc.nextFloat());
-                    }
-                    if (q.getType() == String.class){
-                        System.out.println(q.getName()+" :Veuillez entrer une chaine de caractère");
-                        q.set(I,sc.next());
-                    }
-
-
-
-
-                        //System.out.println("age = "+classe.getMethod("getName").invoke(I));
-                        //System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
-                        //System.out.println("age = "+classe.getMethod("getName").invoke(I));
-                   // System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
-                }
-
+                inputclasse(I,classe);
                 objOut.writeObject(I);
 
 
 
             }
-            catch (ClassNotFoundException e){
+            catch (ClassNotFoundException | IllegalAccessException e){
                 System.err.println(e);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             }
 
             //UnObjet O= new UnObjet() ;
@@ -99,5 +69,40 @@ public class Client implements Serializable {
         catch (IOException e) {
             System.err.println(e);
         }
+    }
+
+
+    public void inputclasse(Object I,Class classe) throws IllegalAccessException {
+        Scanner sc = new Scanner(System.in);
+
+        for (Field q: classe.getDeclaredFields() ) {
+            q.setAccessible(true);
+
+            if (q.getType() == int.class){
+                System.out.println(q.getName()+" : Veuillez entrer un entier");
+                q.setInt(I,sc.nextInt());
+            }
+            if (q.getType() == float.class){
+                System.out.println(q.getName()+" :Veuillez entrer un float");
+                q.setFloat(I,sc.nextFloat());
+            }
+            if (q.getType() == String.class){
+                System.out.println(q.getName()+" :Veuillez entrer une chaine de caractère");
+                q.set(I,sc.next());
+            }
+            if(q.getType() == Object.class){
+                System.out.println("found a class my friende => "+q);
+                inputclasse(q.get(I),q.get(I).getClass());
+            }
+
+
+
+
+            //System.out.println("age = "+classe.getMethod("getName").invoke(I));
+            //System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
+            //System.out.println("age = "+classe.getMethod("getName").invoke(I));
+            // System.out.println(" nom methode => "+q.getName()+" parametres => "+q.getParameterTypes()[0]);
+        }
+
     }
 }

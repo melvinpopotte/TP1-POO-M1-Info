@@ -4,6 +4,8 @@ public class ObjectServ implements Serializable {
 
     private String name ;
     private int age ;
+    private Object test = new Testobj();
+    private int testint;
 
 
     public ObjectServ() {
@@ -27,3 +29,5 @@ public class ObjectServ implements Serializable {
 
 
 }
+
+

@@ -17,6 +17,17 @@ public class ServerThread extends Thread implements Serializable {
         this.liste2 = liste2;
     }
 
+    public void showobj(Object o) throws IllegalAccessException{
+        for (Field f : o.getClass().getDeclaredFields() ) {
+            f.setAccessible(true);
+            if (f.getType() != Object.class)
+            System.out.println(f.getName()+" => "+f.get(o));
+            else{
+                showobj(f.get(o));
+            }
+        }
+    }
+
     @Override
     public void run() {
 
@@ -42,27 +53,24 @@ public class ServerThread extends Thread implements Serializable {
                 liste2.add(I);
             }
 
-
+            System.out.println();
             for (Object o: liste2) {
-                for (Field f : o.getClass().getDeclaredFields() ) {
-                    f.setAccessible(true);
-                    System.out.println(f.getName()+" => "+f.get(o));
-                }
 
+                showobj(o);
+                System.out.println("$%--------%$");
             }
 
 
             //UnObjet O= (UnObjet)objIn.readObject(O);
             client.close();
-        } catch (IOException e) {
+        } catch (IOException | IllegalAccessException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        }
         }
 
 
     }
-}
+
