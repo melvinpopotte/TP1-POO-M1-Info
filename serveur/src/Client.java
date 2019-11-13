@@ -50,10 +50,7 @@ public class Client implements Serializable {
 
                     good = false;
                     pane1.removeAll();
-                    Object I;
-                    Object I2;
-                    I = objIn.readObject();
-                    I2 = I;
+                    Object I = objIn.readObject();
 
 
                     listeinput.removeAll(listeinput);
@@ -89,7 +86,7 @@ public class Client implements Serializable {
                             info.setText("");
                             listeinputcpy.removeAll(listeinputcpy);
                             listeinputcpy.addAll(listeinput);
-                            if (inputclasse2(I2, I2.getClass(), listeinputcpy, pane1, info)) {
+                            if (inputclasse2(I, I.getClass(), listeinputcpy, pane1, info)) {
                                 good = true;
                                 info.setText("BON");
 

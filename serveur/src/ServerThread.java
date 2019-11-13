@@ -7,6 +7,7 @@ public class ServerThread extends Thread implements Serializable {
 
     private Socket client;
     private Object I;
+    private Object I2;
     private ArrayList<Object> liste1 ;
     private ArrayList<Object> liste2 ;
 
@@ -21,7 +22,7 @@ public class ServerThread extends Thread implements Serializable {
         for (Field f : o.getClass().getDeclaredFields() ) {
             f.setAccessible(true);
             if (f.getType() != Object.class)
-            System.out.println(f.getName()+" => "+f.get(o));
+                System.out.println(f.getName()+" => "+f.get(o));
             else{
                 showobj(f.get(o));
             }
@@ -31,46 +32,70 @@ public class ServerThread extends Thread implements Serializable {
     @Override
     public void run() {
 
+        System.out.println("\n---------------------\nNew client connected \n ip adress => " + client.getLocalAddress());
+
+
+
+
         try {
 
-            System.out.println("\n---------------------\nNew client connected \n ip adress => " + client.getLocalAddress());
             InputStream in = client.getInputStream();
             OutputStream out = client.getOutputStream();
 
             ObjectOutputStream objOut = new ObjectOutputStream(out);
             ObjectInputStream objIn = new ObjectInputStream(in);
 
-            synchronized (liste1) {
-                I = liste1.get(0);
-                I = liste1.remove(0);
-            }
-
-            objOut.writeObject(I);
-            I = objIn.readObject();
 
 
-            synchronized (liste2){
-                liste2.add(I);
-            }
+            while (liste1.isEmpty() == false) {
+                synchronized (liste1) {
+                    //I = liste1.get(0);
+                    I = liste1.remove(0);
+                }
 
-            System.out.println();
-            for (Object o: liste2) {
+                objOut.writeObject(I);
+                I2 = objIn.readObject();
 
-                showobj(o);
-                System.out.println("$%--------%$");
+
+                synchronized (liste2) {
+                    liste2.add(I2);
+                    I = null;
+                    I2 = null;
+
+                }
+
+                System.out.println();
+                for (Object o : liste2) {
+
+                    showobj(o);
+                    System.out.println("$%--------%$");
+                }
             }
 
 
             //UnObjet O= (UnObjet)objIn.readObject(O);
             client.close();
         } catch (IOException | IllegalAccessException e) {
+            if (I != null) {
+                synchronized (liste1) {
+                    liste1.add(0, I);
+                }
+            }
+            if (I2 != null) {
+                synchronized (liste2) {
+                    liste2.add(I2);
+                }
+            }
+
+
             System.err.println(e.getMessage());
-            System.exit(1);
+            //System.exit(1);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        }
-
-
     }
+
+
+
+}
 
