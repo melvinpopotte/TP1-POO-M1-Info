@@ -10,7 +10,8 @@ import java.util.ArrayList;
 
 public class Client implements Serializable {
 
-    boolean good = false;
+    private Object I = new Object();
+    private boolean good = false;
     public Client(String serverhost, int PORT) {
 
         JFrame frame = new JFrame("Client");
@@ -29,38 +30,42 @@ public class Client implements Serializable {
 
 
         Socket s = null;
-        try {
-            System.out.println("Client lauched");
-            s = new Socket(serverhost, PORT); // Création du socket
-
-            // Récupération des flux d’entrée/sortie
-            System.out.println("connected");
-
-            //---------------------------------------------------------
-            InputStream in = s.getInputStream();
-            OutputStream out = s.getOutputStream();
-
-            ObjectOutputStream objOut = new ObjectOutputStream(out);
-            ObjectInputStream objIn = new ObjectInputStream(in);
-            //---------------------------------------------------------
-
 
             try {
-                while(true) {
+                int a = 0;
+                int i = 9;
+                System.out.println("Client lauched");
+                s = new Socket(serverhost, PORT); // Création du socket
 
-                    good = false;
-                    pane1.removeAll();
-                    Object I = objIn.readObject();
+                // Récupération des flux d’entrée/sortie
+                System.out.println("connected");
+
+                //---------------------------------------------------------
+                InputStream in = s.getInputStream();
+                OutputStream out = s.getOutputStream();
+                //---------------------------------------------------------
+
+                while (i < 10) {
+                    try {
 
 
-                    listeinput.removeAll(listeinput);
-                    inputclasse(I, I.getClass(), pane1, listeinput);
+
+                        ObjectOutputStream objOut = new ObjectOutputStream(out);
+                        ObjectInputStream objIn = new ObjectInputStream(in);
+
+                        a++;
+                        good = false;
+                        pane1.removeAll();
 
 
+                        I = objIn.readObject();
 
 
+                        listeinput.removeAll(listeinput);
+                        inputclasse(I, I.getClass(), pane1, listeinput);
 
-                    //System.out.println("L'object  a "+classe.getDeclaredFields().length+" elements");
+
+                        //System.out.println("L'object  a "+classe.getDeclaredFields().length+" elements");
              /*
                 Field[] variables = classe.getDeclaredFields();
                // for (Field f: variables) {
@@ -76,58 +81,90 @@ public class Client implements Serializable {
 
 
               */
-                    Button ok = new Button("ok");
-                    info.setHorizontalAlignment(SwingConstants.CENTER);
-                    info.setPreferredSize(new Dimension(500,30));
-                    ok.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent actionEvent) {
+                        Button ok = new Button("ok");
+                        info.setHorizontalAlignment(SwingConstants.CENTER);
+                        info.setPreferredSize(new Dimension(500, 30));
+                        ok.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent actionEvent) {
 
-                            info.setText("");
-                            listeinputcpy.removeAll(listeinputcpy);
-                            listeinputcpy.addAll(listeinput);
-                            if (inputclasse2(I, I.getClass(), listeinputcpy, pane1, info)) {
+
+                                info.setText("");
+
+                                //if (  inputclasse2(res,I, I.getClass(), listeinputcpy, pane1, info) == true ) {
                                 good = true;
-                                info.setText("BON");
+                                // info.setText("BON");
+
+                                //}
+                                //frame.setVisible(true);
+
 
                             }
+                        });
+
+                        ok.setPreferredSize(new Dimension(130, 70));
+
+                        pane1.add(ok);
+                        pane1.add(info);
+                        frame.setVisible(true);
+                        boolean pass = true;
+
+                        while (pass == true) {
+                            while (good == false) {
+
+
+                                try {
+                                    Thread.sleep(10);
+
+                                } catch (InterruptedException e) {
+                                }
+
+                            }
+
+                            listeinputcpy.removeAll(listeinputcpy);
+                            listeinputcpy.addAll(listeinput);
+                            info.setText("BON");
+
+                            Object res = inputclasse2(I, I.getClass(), listeinputcpy, pane1, info, objOut);
+
+                            /*System.out.println("D---------");
+                            for (Field f : res.getClass().getDeclaredFields()) {
+                                f.setAccessible(true);
+                                if (f.getType() != Object.class)
+                                    System.out.println(f.getName() + " => " + f.get(res));
+                            }
+                            System.out.println("D---------2");
+
+                             */
+
                             frame.setVisible(true);
 
+                            if (res != null) {
 
-
+                                objOut.writeObject(I);
+                                objOut.flush();
+                                pass = false;
+                            } else {
+                                good = false;
+                            }
                         }
-                    });
-                    ok.setPreferredSize(new Dimension(130, 70));
 
-                    pane1.add(ok);
-                    pane1.add(info);
-                    frame.setVisible(true);
-                    while (good == false) {
-                        try {
-                            Thread.sleep(10);
 
-                        } catch (InterruptedException e) {
-                        }
+                    } catch (ClassNotFoundException | IllegalAccessException e) {
+                        System.err.println(e);
                     }
-                    //objOut.writeObject(I);
 
-                    objOut.writeObject(I);
+                    //UnObjet O= new UnObjet() ;
+                    //objOut.writeObject(O);
+
+
                 }
+                s.close();
 
-
-
-            } catch (ClassNotFoundException | IllegalAccessException e) {
+            } catch (IOException e) {
                 System.err.println(e);
             }
 
-            //UnObjet O= new UnObjet() ;
-            //objOut.writeObject(O);
-
-
-            s.close();
-        } catch (IOException e) {
-            System.err.println(e);
-        }
     }
 
 
@@ -193,7 +230,7 @@ public class Client implements Serializable {
     }
 
 
-    public boolean inputclasse2(Object I, Class classe, ArrayList<JTextField> listeinputcpy,JPanel pane1,JLabel label) {
+    public Object inputclasse2(Object I, Class classe, ArrayList<JTextField> listeinputcpy,JPanel pane1,JLabel label,ObjectOutputStream objOut) {
         //Scanner sc = new Scanner(System.in);
 
         for (Field q : classe.getDeclaredFields()) {
@@ -204,7 +241,7 @@ public class Client implements Serializable {
                 //label.setHorizontalAlignment(SwingConstants.CENTER);
                 //label.setPreferredSize(new Dimension(500,30));
                 //pane1.add(label);
-                return false;
+                return null;
             }
             else {
                 if (q.getType() == int.class) {
@@ -225,7 +262,7 @@ public class Client implements Serializable {
                     }catch (NumberFormatException e){
                         label.setText("Veuillez devier entrer un entier dans "+q.getName());
 
-                        return false;
+                        return null;
                     }
 
                 }
@@ -244,7 +281,7 @@ public class Client implements Serializable {
                     }catch (NumberFormatException e){
                         label.setText("Veuillez devier entrer un float dans "+q.getName());
 
-                        return false;
+                        return null;
                     }
                 }
                 if (q.getType() == String.class) {
@@ -261,8 +298,8 @@ public class Client implements Serializable {
                 if (q.getType() == Object.class) {
                     //  System.out.println("found a class => " + q);
                     try {
-                        if (inputclasse2(q.get(I), q.get(I).getClass(), listeinputcpy,pane1,label) == false){
-                            return false;
+                        if (inputclasse2(q.get(I), q.get(I).getClass(), listeinputcpy,pane1,label,objOut) == null){
+                            return null;
                         }
 
                     } catch (IllegalAccessException e) {
@@ -273,6 +310,7 @@ public class Client implements Serializable {
 
 
         }
-        return true;
+
+        return I;
     }
 }

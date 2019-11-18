@@ -8,6 +8,7 @@ public class ServerThread extends Thread implements Serializable {
     private Socket client;
     private Object I;
     private Object I2;
+
     private ArrayList<Object> liste1 ;
     private ArrayList<Object> liste2 ;
 
@@ -39,17 +40,21 @@ public class ServerThread extends Thread implements Serializable {
 
         try {
 
+            int i = 9;
             InputStream in = client.getInputStream();
             OutputStream out = client.getOutputStream();
 
-            ObjectOutputStream objOut = new ObjectOutputStream(out);
-            ObjectInputStream objIn = new ObjectInputStream(in);
 
 
 
-            while (liste1.isEmpty() == false) {
+
+            while(i<10) {
+
+
+                ObjectOutputStream objOut = new ObjectOutputStream(out);
+                ObjectInputStream objIn = new ObjectInputStream(in);
+
                 synchronized (liste1) {
-                    //I = liste1.get(0);
                     I = liste1.remove(0);
                 }
 
@@ -64,18 +69,26 @@ public class ServerThread extends Thread implements Serializable {
 
                 }
 
+
                 System.out.println();
+                System.out.println("--------- liste 2 --------");
+
+
                 for (Object o : liste2) {
 
                     showobj(o);
-                    System.out.println("$%--------%$");
+                    System.out.println("--------");
                 }
+                objOut.flush();
             }
+
 
 
             //UnObjet O= (UnObjet)objIn.readObject(O);
             client.close();
         } catch (IOException | IllegalAccessException e) {
+
+
             if (I != null) {
                 synchronized (liste1) {
                     liste1.add(0, I);
@@ -86,6 +99,8 @@ public class ServerThread extends Thread implements Serializable {
                     liste2.add(I2);
                 }
             }
+
+
 
 
             System.err.println(e.getMessage());
