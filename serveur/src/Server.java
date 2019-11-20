@@ -12,7 +12,7 @@ public class Server implements Serializable {
     ArrayList<Object> liste2 = new ArrayList<Object>();
 
     Object obj = new ObjectServ();
-    //Object obj1 = new Testobj();
+    Object obj1 = new Testobj();
 
 
     public Server(int PORT)  {
@@ -20,6 +20,7 @@ public class Server implements Serializable {
         //System.out.println(obj.getClass().getDeclaredFields()[0].getName());
         for (int i = 0; i < 50 ; i++) {
             liste1.add( obj );
+            liste1.add(obj1);
         }
 
 

@@ -15,6 +15,7 @@ public class Client implements Serializable {
     public Client(String serverhost, int PORT) {
 
         JFrame frame = new JFrame("Client");
+        JLabel nameobj = new JLabel();
         JLabel info = new JLabel();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -59,6 +60,10 @@ public class Client implements Serializable {
 
 
                         I = objIn.readObject();
+                        //System.out.println("Primary Object => "+I.getClass().getTypeName());
+                        nameobj.setText("Objet recu de type : "+I.getClass().getTypeName());
+                        nameobj.setHorizontalAlignment(SwingConstants.CENTER);
+                        pane1.add(nameobj);
 
 
                         listeinput.removeAll(listeinput);
@@ -103,6 +108,7 @@ public class Client implements Serializable {
                         });
 
                         ok.setPreferredSize(new Dimension(130, 70));
+
 
                         pane1.add(ok);
                         pane1.add(info);
@@ -207,7 +213,8 @@ public class Client implements Serializable {
             }
             if (q.getType() == Object.class) {
                 //System.out.println("found a class my friende => "+q);
-                JLabel label = new JLabel("Voici L'object : "+q.getName() + " ");
+                //System.out.println("Obj seccondaire =>"+q.get(I).getClass().getTypeName());
+                JLabel label = new JLabel("Voici L'object  \""+q.getName() +"\" de type : "+q.get(I).getClass().getTypeName());
                 label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setPreferredSize(new Dimension(500,30));
                 pane1.add(label);
@@ -297,6 +304,7 @@ public class Client implements Serializable {
                 }
                 if (q.getType() == Object.class) {
                     //  System.out.println("found a class => " + q);
+
                     try {
                         if (inputclasse2(q.get(I), q.get(I).getClass(), listeinputcpy,pane1,label,objOut) == null){
                             return null;
